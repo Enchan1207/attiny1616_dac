@@ -10,4 +10,8 @@ add_compile_options(
     -Wall
 )
 
+include_directories(BEFORE
+    ${PROJECT_SOURCE_DIR}/include
+)
+
 add_subdirectory(src)

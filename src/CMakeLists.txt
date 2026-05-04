@@ -4,4 +4,5 @@ add_executable(attiny1616_dac)
 
 target_sources(attiny1616_dac PRIVATE
     main.c
+    hardware/dac.c
 )
