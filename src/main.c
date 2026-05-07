@@ -1,8 +1,9 @@
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <stdint.h>
 #include <util/delay.h>
 
-#include "hardware/dac.h"
+#include "hardware/oscillator.h"
 
 int main() {
     CCP = CCP_IOREG_gc;
@@ -10,15 +11,11 @@ int main() {
 
     PORTA.DIRSET = 1 << 6;
 
-    dac_init(dac0, VREF_4V3);
+    oscillator_init(oscillator);
 
-    dac_output_enable(dac0);
-
-    uint8_t value = 0;
+    sei();
 
     while (1) {
-        dac_set_value(dac0, value);
-        _delay_us(10);
-        value++;
+        //
     }
 }
