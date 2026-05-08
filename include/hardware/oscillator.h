@@ -5,14 +5,14 @@
 
 /// @brief 波形テーブル
 typedef struct {
-    int8_t data[256];
+    const int8_t data[256];
 } wavetable_t;
 
 /// @brief オシレータコンテキスト
 typedef struct oscillator_ctx_t oscillator_ctx_t;
 
-/// @brief (開発用) デフォルトオシレータ
-extern oscillator_ctx_t* oscillator;
+/// @brief オシレータインスタンス0
+extern oscillator_ctx_t* osc0;
 
 /// @brief オシレータモジュールを初期化する
 /// @param ctx
