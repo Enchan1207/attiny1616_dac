@@ -12,7 +12,7 @@ int main() {
 
     PORTA.DIRSET = 1 << 6;
 
-    oscillator_init(osc0);
+    oscillator_init();
 
     oscillator_set_wavetable(osc0, &pulseTable);
     oscillator_set_frequency(osc0, 440);

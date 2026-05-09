@@ -24,7 +24,7 @@ oscillator_ctx_t* osc0 = &osc0_internal;
 // TCA0オーバーフロー割り込み
 ISR(TCA0_OVF_vect) {
     // 割込みフラグをクリア
-    TCA0.SINGLE.INTFLAGS |= TCA_SINGLE_OVF_bm << TCA_SINGLE_OVF_bp;
+    TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
 
     if (!(osc0->enabled)) {
         DAC0.DATA = 0x80;
@@ -39,7 +39,7 @@ ISR(TCA0_OVF_vect) {
     osc0->phase += osc0->step;
 }
 
-void oscillator_init(oscillator_ctx_t* ctx) {
+void oscillator_init() {
     cli();
 
     // 参照電圧を4.3Vに設定し、DACを有効化
@@ -59,10 +59,8 @@ void oscillator_init(oscillator_ctx_t* ctx) {
     // 125000ns / 50ns = 2500, 31250ns / 50ns = 625, 2083ns/50ns = 416, ...
 
     TCA0.SINGLE.PER = (625 - 1);
-    TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV1_gc | (TCA_SINGLE_ENABLE_bm | TCA_SINGLE_ENABLE_bp);
+    TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
     TCA0.SINGLE.INTCTRL |= TCA_SINGLE_OVF_bm << TCA_SINGLE_OVF_bp;
-
-    sei();
 }
 
 void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table) {
