@@ -31,3 +31,9 @@ cmake --build --preset target
 ```sh
 avrdude -p attiny1616 -c serialupdi -P /path/to/port -U flash:w:./build/target/src/attiny1616_dac
 ```
+
+## Read flash usage
+
+```sh
+avr-objdump -P mem-usage ./build/target/src/attiny1616_dac
+```
