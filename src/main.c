@@ -7,8 +7,8 @@
 #include "wavetable/pulse.h"
 
 int main() {
-    CCP = CCP_IOREG_gc;
-    CLKCTRL_MCLKCTRLB &= ~CLKCTRL_PEN_bm;
+    // クロック設定 (プリスケーラ1倍, 無効)
+    _PROTECTED_WRITE(CLKCTRL.MCLKCTRLB, 0x00);
 
     PORTA.DIRSET = 1 << 6;
 
