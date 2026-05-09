@@ -1,24 +1,32 @@
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <stdint.h>
 #include <util/delay.h>
 
-#include "hardware/dac.h"
+#include "hardware/oscillator.h"
+#include "wavetable/pulse.h"
+#include "wavetable/sine.h"
 
 int main() {
-    CCP = CCP_IOREG_gc;
-    CLKCTRL_MCLKCTRLB &= ~CLKCTRL_PEN_bm;
+    // クロック設定 (プリスケーラ1倍, 無効)
+    _PROTECTED_WRITE(CLKCTRL.MCLKCTRLB, 0x00);
 
     PORTA.DIRSET = 1 << 6;
 
-    dac_init(dac0, VREF_4V3);
+    oscillator_init();
 
-    dac_output_enable(dac0);
+    // NOTE: 圧電ブザーだと440Hzのサイン波は周波数特性的にほとんど鳴らない。4kHzくらいまで上げないと響かない
+    // oscillator_set_wavetable(osc0, &sineTable);
+    // oscillator_set_frequency(osc0, 440);
 
-    uint8_t value = 0;
+    oscillator_set_wavetable(osc0, &pulseTable);
+    oscillator_set_frequency(osc0, 440);
+
+    oscillator_enable(osc0);
+
+    sei();
 
     while (1) {
-        dac_set_value(dac0, value);
-        _delay_us(10);
-        value++;
+        //
     }
 }
