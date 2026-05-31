@@ -52,9 +52,10 @@ void rotenc_init() {
 }
 
 rotenc_dir_t rotenc_get_direction(rotenc_ctx_t* ctx) {
-    cli();
+    // 本来は読出し -> 書込みの間は割込みを止めるべき(cli-sei)だが、
+    // AVRではこの命令にそこまで時間がかからないこと、オシレータの処理を止めたくないことから、
+    // 許容する
     rotenc_dir_t dir = ctx->direction;
     ctx->direction = ROTATION_NONE;
-    sei();
     return dir;
 }
