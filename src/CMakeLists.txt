@@ -6,6 +6,7 @@ target_sources(attiny1616_dac PRIVATE
     main.c
     hardware/oscillator.c
     hardware/rotenc.c
+    hardware/usart.c
     wavetable/pulse.c
     wavetable/sine.c
 )
