@@ -1,0 +1,53 @@
+#include "module/oscillator.h"
+
+#include <stdbool.h>
+#include <stddef.h>
+
+struct oscillator_ctx_t {
+    volatile bool enabled;
+    volatile uint16_t phase;
+    volatile uint16_t step;
+    volatile const wavetable_t* table;
+};
+
+struct oscillator_ctx_t osc0_internal = {
+    .enabled = false,
+    .phase = 0,
+    .step = 0,
+    .table = NULL,
+};
+
+oscillator_ctx_t* osc0 = &osc0_internal;
+
+void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table) {
+    ctx->table = table;
+}
+
+void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency) {
+    // 周波数を65536分率に変換してステップとする
+    uint16_t step = (uint32_t)frequency * 65536UL / 32000;
+    ctx->step = step;
+}
+
+void oscillator_enable(oscillator_ctx_t* ctx) {
+    ctx->enabled = true;
+}
+
+void oscillator_disable(oscillator_ctx_t* ctx) {
+    ctx->enabled = false;
+}
+
+uint8_t oscillator_step(oscillator_ctx_t* ctx) {
+    if (!(ctx->enabled)) {
+        return 0x80;
+    }
+
+    if (ctx->table == NULL) {
+        return 0x80;
+    }
+
+    // 値を取得してphaseを進める
+    uint8_t value = ctx->table->data[ctx->phase >> 8];
+    ctx->phase += ctx->step;
+    return value;
+}
