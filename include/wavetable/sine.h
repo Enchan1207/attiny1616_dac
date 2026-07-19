@@ -1,7 +1,7 @@
 #ifndef SINE_H
 #define SINE_H
 
-#include "hardware/oscillator.h"
+#include "module/oscillator.h"
 
 extern const wavetable_t sineTable;
 

@@ -1,7 +1,7 @@
 #ifndef PULSE_H
 #define PULSE_H
 
-#include "hardware/oscillator.h"
+#include "module/oscillator.h"
 
 extern const wavetable_t pulseTable;
 
