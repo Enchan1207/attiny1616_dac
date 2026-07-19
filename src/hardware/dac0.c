@@ -9,6 +9,6 @@ void dac0_init() {
     DAC0.CTRLA |= DAC_ENABLE_bm | DAC_OUTEN_bm;
 }
 
-inline void dac0_set(uint8_t value) {
+void dac0_set(uint8_t value) {
     DAC0.DATA = value;
 }

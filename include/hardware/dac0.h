@@ -8,6 +8,6 @@ void dac0_init();
 
 /// @brief DAC0の出力を設定する
 /// @param value
-inline void dac0_set(uint8_t value);
+void dac0_set(uint8_t value);
 
 #endif /* HARDWARE_DAC0_H */
