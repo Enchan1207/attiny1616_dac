@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <util/delay.h>
 
-#include "hardware/oscillator.h"
 #include "hardware/rotenc.h"
 #include "hardware/usart.h"
 #include "wavetable/pulse.h"
@@ -15,10 +14,10 @@ int main() {
     _PROTECTED_WRITE(CLKCTRL.MCLKCTRLB, 0x00);
 
     // オシレータ
-    oscillator_init();
-    oscillator_set_frequency(osc0, 440);
-    oscillator_set_wavetable(osc0, &sineTable);
-    oscillator_enable(osc0);
+    // oscillator_init();
+    // oscillator_set_frequency(osc0, 440);
+    // oscillator_set_wavetable(osc0, &sineTable);
+    // oscillator_enable(osc0);
 
     // ロータリエンコーダ
     rotenc_init();
