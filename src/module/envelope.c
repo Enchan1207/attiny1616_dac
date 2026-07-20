@@ -6,6 +6,7 @@ void envelope_init(envelope_ctx_t* ctx) {
     ctx->sustain = 0;
     ctx->release = 0;
     ctx->state = ENVELOPE_STATE_STOP;
+    ctx->current_volume = 0;
 }
 
 uint8_t envelope_get(envelope_ctx_t* ctx, envelope_param_t param) {
@@ -51,22 +52,61 @@ void envelope_set(envelope_ctx_t* ctx, envelope_param_t param, uint8_t value) {
 }
 
 void envelope_note_on(envelope_ctx_t* ctx) {
-    if (ctx->state != ENVELOPE_STATE_STOP) {
-        return;
-    }
-
     ctx->state = ENVELOPE_STATE_ATTACK;
 }
 
 void envelope_note_off(envelope_ctx_t* ctx) {
-    if (ctx->state != ENVELOPE_STATE_SUSTAIN) {
-        return;
-    }
-
     ctx->state = ENVELOPE_STATE_RELEASE;
 }
 
 uint8_t envelope_step(envelope_ctx_t* ctx) {
-    // TODO
-    return 0;
+    switch (ctx->state) {
+        case ENVELOPE_STATE_ATTACK: {
+            uint16_t new_volume = ctx->current_volume + ctx->attack;
+
+            if (new_volume > 0xFF) {
+                ctx->state = ENVELOPE_STATE_DECAY;
+                ctx->current_volume = 0xFF;
+                break;
+            }
+
+            ctx->current_volume = (uint8_t)new_volume;
+            break;
+        }
+
+        case ENVELOPE_STATE_DECAY: {
+            int16_t new_volume = (int16_t)ctx->current_volume - ctx->decay;
+
+            if (new_volume <= ctx->sustain) {
+                ctx->state = ENVELOPE_STATE_SUSTAIN;
+                ctx->current_volume = ctx->sustain;
+                break;
+            }
+
+            ctx->current_volume = (uint8_t)new_volume;
+            break;
+        }
+
+        case ENVELOPE_STATE_SUSTAIN:
+            // do nothing
+            break;
+
+        case ENVELOPE_STATE_RELEASE: {
+            int16_t new_volume = (int16_t)ctx->current_volume - ctx->release;
+
+            if (new_volume <= 0) {
+                ctx->state = ENVELOPE_STATE_STOP;
+                ctx->current_volume = 0;
+                break;
+            }
+
+            ctx->current_volume = (uint8_t)new_volume;
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return ctx->current_volume;
 }

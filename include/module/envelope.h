@@ -28,6 +28,8 @@ typedef struct {
     volatile uint8_t decay;
     volatile uint8_t sustain;
     volatile uint8_t release;
+
+    volatile uint8_t current_volume;
 } envelope_ctx_t;
 
 /// @brief エンベロープを初期化する
