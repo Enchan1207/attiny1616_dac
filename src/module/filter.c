@@ -1,7 +1,7 @@
 #include "module/filter.h"
 
 void filter_init(filter_ctx_t* ctx) {
-    ctx->coefficient = 0;
+    ctx->coefficient = 0xFF;
     ctx->state_q8 = 0;
 }
 
