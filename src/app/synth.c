@@ -39,6 +39,7 @@ void synthesizer_init(synthesizer_ctx_t* ctx) {
     voice_init(&ctx->voice);
     filter_init(&ctx->filter);
     lfo_init(&ctx->modulation_lfo);
+    lfo_set_waveform(&ctx->modulation_lfo, LFO_WAVEFORM_TRIANGLE);
 
     ctx->lfo_depth = 0x00;
 }
