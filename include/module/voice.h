@@ -39,10 +39,10 @@ typedef enum {
 /// @param ctx
 void voice_init(voice_ctx_t* ctx);
 
-/// @brief ボイスのサンプルを取得する
+/// @brief ボイスのフェーズを進め、サンプルを取得する
 /// @param ctx
 /// @return このボイスが発声している音
-uint8_t voice_sample_next(voice_ctx_t* ctx);
+uint8_t voice_step(voice_ctx_t* ctx);
 
 /// @brief ボイスの発声を開始する
 /// @param ctx

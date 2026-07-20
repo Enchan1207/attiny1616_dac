@@ -44,7 +44,7 @@ void voice_init(voice_ctx_t* ctx) {
     oscillator_init(&ctx->osc_ctx);
 }
 
-uint8_t voice_sample_next(voice_ctx_t* ctx) {
+uint8_t voice_step(voice_ctx_t* ctx) {
     uint8_t osc_value = oscillator_step(&ctx->osc_ctx);
     // TODO: envelope?
     return osc_value;
