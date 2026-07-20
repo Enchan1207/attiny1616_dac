@@ -7,7 +7,7 @@ void filter_init(filter_ctx_t* ctx) {
 
 audio_sample_t filter_step(filter_ctx_t* ctx, audio_sample_t input) {
     int32_t input_q8 = (int32_t)input * 256;
-    int32_t diff = ctx->state_q8 - input_q8;
+    int32_t diff = input_q8 - ctx->state_q8;
 
     ctx->state_q8 += (diff * ctx->coefficient) >> 8;
 
