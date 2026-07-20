@@ -8,7 +8,8 @@
 /// @brief フィルタコンテキスト
 typedef struct {
     int32_t state_q8;
-    uint8_t coefficient;
+    uint8_t cutoff;
+    uint16_t coefficient_q15;
 } filter_ctx_t;
 
 /// @brief フィルタを初期化する
@@ -20,15 +21,15 @@ void filter_init(filter_ctx_t* ctx);
 /// @return
 audio_sample_t filter_step(filter_ctx_t* ctx, audio_sample_t input);
 
-/// @brief フィルタのLPF係数を設定する
+/// @brief フィルタのカットオフパラメータを設定する
 /// @param ctx
-/// @param coefficient 係数 (0: カットオフ低 / 255: カットオフ高)
-void filter_set_coefficient(filter_ctx_t* ctx, uint8_t coefficient);
+/// @param cutoff 係数 (0: カットオフ低 / 255: カットオフ高)
+void filter_set_cutoff(filter_ctx_t* ctx, uint8_t cutoff);
 
-/// @brief フィルタのLPF係数を取得する
+/// @brief フィルタのカットオフパラメータを取得する
 /// @param ctx
 /// @return
-uint8_t filter_get_coefficient(filter_ctx_t* ctx);
+uint8_t filter_get_cutoff(filter_ctx_t* ctx);
 
 /// @brief フィルタの内部状態を指定したサンプル値へリセットする
 /// @param ctx
