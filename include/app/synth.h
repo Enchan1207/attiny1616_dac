@@ -36,4 +36,9 @@ void synthesizer_set_active_synth(synthesizer_ctx_t* ctx);
 /// @param depth
 void synthesizer_set_lfo_depth(synthesizer_ctx_t* ctx, uint8_t depth);
 
+/// @brief シンセサイザのLFO周波数を設定する
+/// @param ctx
+/// @param frequency 周波数 (mHz)
+void synthesizer_set_lfo_frequency(synthesizer_ctx_t* ctx, uint16_t frequency);
+
 #endif /* APP_SYNTH_H */

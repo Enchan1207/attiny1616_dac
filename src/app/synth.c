@@ -50,3 +50,7 @@ void synthesizer_set_active_synth(synthesizer_ctx_t* ctx) {
 void synthesizer_set_lfo_depth(synthesizer_ctx_t* ctx, uint8_t depth) {
     ctx->lfo_depth = depth;
 }
+
+void synthesizer_set_lfo_frequency(synthesizer_ctx_t* ctx, uint16_t frequency) {
+    lfo_set_frequency(&ctx->modulation_lfo, frequency);
+}
