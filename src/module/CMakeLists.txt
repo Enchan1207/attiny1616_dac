@@ -6,4 +6,5 @@ target_sources(tinysynth_modules PRIVATE
     oscillator.c
     voice.c
     envelope.c
+    filter.c
 )
