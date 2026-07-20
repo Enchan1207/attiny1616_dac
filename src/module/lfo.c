@@ -17,7 +17,7 @@ void lfo_set_waveform(lfo_ctx_t* ctx, lfo_waveform_t wfm) {
 }
 
 void lfo_set_frequency(lfo_ctx_t* ctx, uint16_t freq) {
-    uint16_t step = (uint32_t)freq * 65536UL / AUDIO_SAMPLE_RATE;
+    uint16_t step = (uint64_t)freq * 65536ULL * LFO_DIVIDER / (1000ULL * AUDIO_SAMPLE_RATE);
     ctx->step = step;
 }
 
