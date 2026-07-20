@@ -8,6 +8,10 @@
 
 static synthesizer_ctx_t* active_synth;
 
+synthesizer_ctx_t synth0_internal;
+
+synthesizer_ctx_t* synth0 = &synth0_internal;
+
 static void synthesizer_step() {
     if (active_synth == NULL) {
         return;

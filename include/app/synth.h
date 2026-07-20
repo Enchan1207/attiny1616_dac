@@ -11,6 +11,9 @@ typedef struct {
     voice_ctx_t voice;
 } synthesizer_ctx_t;
 
+/// @brief シンセサイザインスタンス0
+extern synthesizer_ctx_t* synth0;
+
 /// @brief シンセサイザの利用を開始する
 void synthesizer_begin();
 
