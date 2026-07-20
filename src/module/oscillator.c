@@ -4,7 +4,6 @@
 #include <stddef.h>
 
 void oscillator_init(oscillator_ctx_t* ctx) {
-    ctx->enabled = false;
     ctx->phase = 0;
     ctx->step = 0;
     ctx->table = NULL;
@@ -20,19 +19,7 @@ void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency) {
     ctx->step = step;
 }
 
-void oscillator_enable(oscillator_ctx_t* ctx) {
-    ctx->enabled = true;
-}
-
-void oscillator_disable(oscillator_ctx_t* ctx) {
-    ctx->enabled = false;
-}
-
 uint8_t oscillator_step(oscillator_ctx_t* ctx) {
-    if (!(ctx->enabled)) {
-        return 0x80;
-    }
-
     if (ctx->table == NULL) {
         return 0x80;
     }
