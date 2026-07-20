@@ -4,13 +4,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "module/envelope.h"
 #include "module/oscillator.h"
 
 /// @brief ボイスコンテキスト
 typedef struct {
     oscillator_ctx_t osc_ctx;
-
-    // TODO: envelope_ctx_t* evp_ctx;
+    envelope_ctx_t evp_ctx;
 } voice_ctx_t;
 
 /// @brief ボイスの波形

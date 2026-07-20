@@ -4,6 +4,7 @@
 
 #include "hardware/dac0.h"
 #include "hardware/tca0.h"
+#include "module/envelope.h"
 #include "module/oscillator.h"
 #include "wavetable/pulse.h"
 #include "wavetable/sine.h"
@@ -42,23 +43,23 @@ static uint16_t calculate_frequency(voice_note_t note) {
 
 void voice_init(voice_ctx_t* ctx) {
     oscillator_init(&ctx->osc_ctx);
+    envelope_init(&ctx->evp_ctx);
 }
 
 uint8_t voice_step(voice_ctx_t* ctx) {
     uint8_t osc_value = oscillator_step(&ctx->osc_ctx);
-    // TODO: envelope?
+    uint8_t evp_value = envelope_step(&ctx->evp_ctx);
+    // TODO: 乗算?
     return osc_value;
 }
 
 void voice_note_on(voice_ctx_t* ctx, voice_note_t note) {
     oscillator_set_frequency(&ctx->osc_ctx, calculate_frequency(note));
-    // TODO: envelope
-    oscillator_enable(&ctx->osc_ctx);
+    envelope_note_on(&ctx->evp_ctx);
 }
 
 void voice_note_off(voice_ctx_t* ctx) {
-    // TODO: envelope
-    oscillator_disable(&ctx->osc_ctx);
+    envelope_note_off(&ctx->evp_ctx);
 }
 
 void voice_set_waveform(voice_ctx_t* ctx, voice_waveform_t wfm) {

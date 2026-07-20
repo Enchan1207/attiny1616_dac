@@ -13,4 +13,5 @@ target_sources(attiny1616_dac PRIVATE
     module/oscillator.c
     module/voice.c
     app/synth.c
+    module/envelope.c
 )
