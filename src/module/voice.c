@@ -44,6 +44,8 @@ static uint16_t calculate_frequency(voice_note_t note) {
 void voice_init(voice_ctx_t* ctx) {
     oscillator_init(&ctx->osc_ctx);
     envelope_init(&ctx->evp_ctx);
+
+    ctx->base_step = 0;
 }
 
 audio_sample_t voice_step(voice_ctx_t* ctx) {
@@ -55,7 +57,13 @@ audio_sample_t voice_step(voice_ctx_t* ctx) {
 }
 
 void voice_note_on(voice_ctx_t* ctx, voice_note_t note) {
-    oscillator_set_frequency(&ctx->osc_ctx, calculate_frequency(note));
+    uint16_t frequency = calculate_frequency(note);
+
+    uint16_t step = (uint32_t)frequency * 65536UL / AUDIO_SAMPLE_RATE;
+    oscillator_set_step(&ctx->osc_ctx, step);
+
+    ctx->base_step = step;
+
     envelope_note_on(&ctx->evp_ctx);
 }
 
@@ -76,4 +84,16 @@ void voice_set_waveform(voice_ctx_t* ctx, voice_waveform_t wfm) {
         default:
             break;
     }
+}
+
+void voice_set_pitch_modulation(voice_ctx_t* ctx, int16_t modulation) {
+    int32_t increment = ctx->base_step + modulation;
+
+    if (increment < 1) {
+        increment = 1;
+    } else if (increment > UINT16_MAX) {
+        increment = UINT16_MAX;
+    }
+
+    oscillator_set_step(&ctx->osc_ctx, (uint16_t)increment);
 }

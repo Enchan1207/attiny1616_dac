@@ -12,6 +12,8 @@
 typedef struct {
     oscillator_ctx_t osc_ctx;
     envelope_ctx_t evp_ctx;
+
+    uint16_t base_step;
 } voice_ctx_t;
 
 /// @brief ボイスの波形
@@ -58,5 +60,10 @@ void voice_note_off(voice_ctx_t* ctx);
 /// @param ctx
 /// @param wfm
 void voice_set_waveform(voice_ctx_t* ctx, voice_waveform_t wfm);
+
+/// @brief ボイスのピッチ変調を設定する
+/// @param ctx
+/// @param modulation
+void voice_set_pitch_modulation(voice_ctx_t* ctx, int16_t modulation);
 
 #endif /* MODULE_VOICE_H */
