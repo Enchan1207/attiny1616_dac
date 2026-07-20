@@ -3,14 +3,6 @@
 
 #include <stdint.h>
 
-/// @brief エンベロープのパラメータ
-typedef enum {
-    ENVELOPE_PARAM_ATTACK,
-    ENVELOPE_PARAM_DECAY,
-    ENVELOPE_PARAM_SUSTAIN,
-    ENVELOPE_PARAM_RELEASE,
-} envelope_param_t;
-
 /// @brief エンベロープの状態
 typedef enum {
     ENVELOPE_STATE_STOP,
@@ -24,29 +16,42 @@ typedef enum {
 typedef struct {
     volatile envelope_state_t state;
 
-    volatile uint8_t attack;
-    volatile uint8_t decay;
-    volatile uint8_t sustain;
-    volatile uint8_t release;
+    volatile uint16_t attack_step;
 
-    volatile uint8_t current_volume;
+    volatile uint16_t decay_ms;
+    volatile uint16_t decay_step;
+
+    volatile uint16_t sustain;
+
+    volatile uint16_t release_ms;
+    volatile uint16_t release_step;
+
+    volatile uint16_t current_level;
 } envelope_ctx_t;
 
 /// @brief エンベロープを初期化する
 /// @param ctx
 void envelope_init(envelope_ctx_t* ctx);
 
-/// @brief エンベロープのパラメータを取得する
+/// @brief Attack時間を設定する
 /// @param ctx
-/// @param param
-/// @return
-uint8_t envelope_get(envelope_ctx_t* ctx, envelope_param_t param);
+/// @param ms
+void envelope_set_attack_ms(envelope_ctx_t* ctx, uint16_t ms);
 
-/// @brief エンベロープのパラメータを設定する
+/// @brief Decay時間を設定する
 /// @param ctx
-/// @param param
+/// @param ms
+void envelope_set_decay_ms(envelope_ctx_t* ctx, uint16_t ms);
+
+/// @brief Sustainレベルを設定する
+/// @param ctx
 /// @param value
-void envelope_set(envelope_ctx_t* ctx, envelope_param_t param, uint8_t value);
+void envelope_set_sustain(envelope_ctx_t* ctx, uint16_t value);
+
+/// @brief Release時間を設定する
+/// @param ctx
+/// @param ms
+void envelope_set_release_ms(envelope_ctx_t* ctx, uint16_t ms);
 
 /// @brief エンベロープをattack状態に遷移させる
 /// @param ctx
