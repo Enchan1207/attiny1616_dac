@@ -17,6 +17,11 @@ static void synthesizer_step() {
         return;
     }
 
+    int8_t lfo_value = lfo_step(&active_synth->modulation_lfo);
+    int16_t pitch_modulation = ((int16_t)lfo_value * active_synth->lfo_depth) >> 7;
+
+    voice_set_pitch_modulation(&active_synth->voice, pitch_modulation);
+
     audio_sample_t voice = voice_step(&active_synth->voice);
     audio_sample_t filtered = filter_step(&active_synth->filter, voice);
     uint8_t dac_value = (uint8_t)((int16_t)filtered + 0x80);
@@ -33,8 +38,15 @@ void synthesizer_begin() {
 void synthesizer_init(synthesizer_ctx_t* ctx) {
     voice_init(&ctx->voice);
     filter_init(&ctx->filter);
+    lfo_init(&ctx->modulation_lfo);
+
+    ctx->lfo_depth = 0x00;
 }
 
 void synthesizer_set_active_synth(synthesizer_ctx_t* ctx) {
     active_synth = ctx;
+}
+
+void synthesizer_set_lfo_depth(synthesizer_ctx_t* ctx, uint8_t depth) {
+    ctx->lfo_depth = depth;
 }
