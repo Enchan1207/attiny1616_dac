@@ -7,4 +7,5 @@ target_sources(tinysynth_modules PRIVATE
     voice.c
     envelope.c
     filter.c
+    lfo.c
 )
