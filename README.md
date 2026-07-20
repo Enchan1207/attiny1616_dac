@@ -1,8 +1,14 @@
-# ATtiny1616のDACで遊ぶ
+# tinysynth
 
-## Overview
+The tiny synthesizer on Microchip [ATtiny1616](https://www.microchip.com/en-us/product/attiny1616)
 
-この子DAC内蔵してたの！？
+## Features
+
+- 32kSPS oscillator
+- 256sample waveforms
+  - pulse
+  - sine
+- envelope control
 
 ## License
 

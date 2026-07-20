@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 
-add_executable(attiny1616_dac)
+add_executable(tinysynth)
 
-target_sources(attiny1616_dac PRIVATE
+target_sources(tinysynth PRIVATE
     main.c
     hardware/tca0.c
     hardware/dac0.c
