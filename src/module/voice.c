@@ -49,8 +49,7 @@ void voice_init(voice_ctx_t* ctx) {
 uint8_t voice_step(voice_ctx_t* ctx) {
     uint8_t osc_value = oscillator_step(&ctx->osc_ctx);
     uint8_t evp_value = envelope_step(&ctx->evp_ctx);
-    // TODO: 乗算?
-    return osc_value;
+    return (uint8_t)(((uint16_t)osc_value * evp_value) >> 8);
 }
 
 void voice_note_on(voice_ctx_t* ctx, voice_note_t note) {
