@@ -11,4 +11,5 @@ target_sources(attiny1616_dac PRIVATE
     wavetable/pulse.c
     wavetable/sine.c
     module/oscillator.c
+    module/voice.c
 )
