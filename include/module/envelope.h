@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#include "module/audio.h"
-
 /// @brief エンベロープの状態
 typedef enum {
     ENVELOPE_STATE_STOP,
@@ -66,6 +64,6 @@ void envelope_note_off(envelope_ctx_t* ctx);
 /// @brief エンベロープの状態を進める
 /// @param ctx
 /// @return 状態を進める前の時点でオシレータに乗算されるべき値
-audio_sample_t envelope_step(envelope_ctx_t* ctx);
+uint8_t envelope_step(envelope_ctx_t* ctx);
 
 #endif /* MODULE_ENVELOPE_H */

@@ -7,7 +7,7 @@
 void dac0_init();
 
 /// @brief DAC0の出力を設定する
-/// @param value
+/// @param value DAC に書き込む unsigned 8bit の生値
 void dac0_set(uint8_t value);
 
 #endif /* HARDWARE_DAC0_H */

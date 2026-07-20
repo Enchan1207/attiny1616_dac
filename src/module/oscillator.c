@@ -21,11 +21,11 @@ void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency) {
 
 audio_sample_t oscillator_step(oscillator_ctx_t* ctx) {
     if (ctx->table == NULL) {
-        return 0x80;
+        return 0;
     }
 
     // 値を取得してphaseを進める
-    uint8_t value = ctx->table->data[ctx->phase >> 8];
+    audio_sample_t value = ctx->table->data[ctx->phase >> 8];
     ctx->phase += ctx->step;
     return value;
 }

@@ -17,8 +17,8 @@ static void synthesizer_step() {
         return;
     }
 
-    uint8_t value = voice_step(&active_synth->voice);
-    dac0_set(value);
+    audio_sample_t value = voice_step(&active_synth->voice);
+    dac0_set((uint8_t)((int16_t)value + 0x80));
 }
 
 void synthesizer_begin() {
