@@ -17,8 +17,11 @@ static void synthesizer_step() {
         return;
     }
 
-    uint8_t value = voice_step(&active_synth->voice);
-    dac0_set(value);
+    audio_sample_t voice = voice_step(&active_synth->voice);
+    audio_sample_t filtered = filter_step(&active_synth->filter, voice);
+    uint8_t dac_value = (uint8_t)((int16_t)filtered + 0x80);
+
+    dac0_set(dac_value);
 }
 
 void synthesizer_begin() {
@@ -29,6 +32,7 @@ void synthesizer_begin() {
 
 void synthesizer_init(synthesizer_ctx_t* ctx) {
     voice_init(&ctx->voice);
+    filter_init(&ctx->filter);
 }
 
 void synthesizer_set_active_synth(synthesizer_ctx_t* ctx) {

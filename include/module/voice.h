@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "module/audio.h"
 #include "module/envelope.h"
 #include "module/oscillator.h"
 
@@ -42,7 +43,7 @@ void voice_init(voice_ctx_t* ctx);
 /// @brief ボイスのフェーズを進め、サンプルを取得する
 /// @param ctx
 /// @return このボイスが発声している音
-uint8_t voice_step(voice_ctx_t* ctx);
+audio_sample_t voice_step(voice_ctx_t* ctx);
 
 /// @brief ボイスの発声を開始する
 /// @param ctx

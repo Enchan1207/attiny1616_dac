@@ -4,11 +4,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "module/filter.h"
 #include "module/voice.h"
 
 /// @brief シンセサイザコンテキスト
 typedef struct {
     voice_ctx_t voice;
+    filter_ctx_t filter;
 } synthesizer_ctx_t;
 
 /// @brief シンセサイザインスタンス0

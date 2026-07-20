@@ -46,14 +46,12 @@ void voice_init(voice_ctx_t* ctx) {
     envelope_init(&ctx->evp_ctx);
 }
 
-uint8_t voice_step(voice_ctx_t* ctx) {
-    uint8_t osc_value = oscillator_step(&ctx->osc_ctx);
+audio_sample_t voice_step(voice_ctx_t* ctx) {
+    audio_sample_t osc_value = oscillator_step(&ctx->osc_ctx);
     uint8_t evp_value = envelope_step(&ctx->evp_ctx);
+    int16_t scaled = ((int16_t)osc_value * evp_value) >> 8;
 
-    int16_t centered = (int16_t)osc_value - 0x80;
-    int16_t scaled = (centered * evp_value) >> 8;
-
-    return (uint8_t)(scaled + 0x80);
+    return (audio_sample_t)scaled;
 }
 
 void voice_note_on(voice_ctx_t* ctx, voice_note_t note) {
