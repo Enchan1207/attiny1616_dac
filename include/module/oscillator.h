@@ -4,10 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/// @brief 波形テーブル
-typedef struct {
-    const uint8_t data[256];
-} wavetable_t;
+#include "wavetable/wavetable.h"
 
 /// @brief オシレータコンテキスト
 typedef struct {
