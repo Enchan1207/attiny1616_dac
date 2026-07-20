@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "module/audio.h"
+
 void oscillator_init(oscillator_ctx_t* ctx) {
     ctx->phase = 0;
     ctx->step = 0;
@@ -15,7 +17,7 @@ void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table) {
 
 void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency) {
     // 周波数を65536分率に変換してステップとする
-    uint16_t step = (uint32_t)frequency * 65536UL / 32000;
+    uint16_t step = (uint32_t)frequency * 65536UL / AUDIO_SAMPLE_RATE;
     ctx->step = step;
 }
 

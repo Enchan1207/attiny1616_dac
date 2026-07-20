@@ -58,7 +58,7 @@ int main() {
     envelope_set_decay_ms(&synth0->voice.evp_ctx, 80);
     envelope_set_sustain(&synth0->voice.evp_ctx, 0xA0A0);
     envelope_set_release_ms(&synth0->voice.evp_ctx, 120);
-    filter_set_coefficient(&synth0->filter, filter_coefficient);
+    filter_set_cutoff(&synth0->filter, filter_coefficient);
 
     // ロータリエンコーダ
     rotenc_init();
@@ -88,7 +88,7 @@ int main() {
         }
 
         filter_coefficient = next_coefficient;
-        filter_set_coefficient(&synth0->filter, filter_coefficient);
+        filter_set_cutoff(&synth0->filter, filter_coefficient);
         print_filter_coefficient(filter_coefficient);
     }
 }

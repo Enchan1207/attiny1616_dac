@@ -1,6 +1,7 @@
 #include "module/envelope.h"
 
-const uint16_t ENVELOPE_SAMPLE_RATE = 32000;
+#include "module/audio.h"
+
 const uint16_t ENVELOPE_MAX_LEVEL = 65535;
 
 /// @brief 時間をステップ数に換算する
@@ -19,7 +20,7 @@ static uint16_t envelope_calc_step(uint32_t range, uint16_t ms) {
         return (uint16_t)range;
     }
 
-    samples = ((uint32_t)ENVELOPE_SAMPLE_RATE * ms) / 1000UL;
+    samples = ((uint32_t)AUDIO_SAMPLE_RATE * ms) / 1000UL;
     if (samples == 0) {
         samples = 1;
     }
