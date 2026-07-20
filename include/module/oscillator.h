@@ -22,10 +22,10 @@ void oscillator_init(oscillator_ctx_t* ctx);
 /// @param table
 void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table);
 
-/// @brief 周波数を設定する
+/// @brief 位相進み量を設定する
 /// @param ctx
-/// @param frequency
-void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency);
+/// @param step
+void oscillator_set_step(oscillator_ctx_t* ctx, uint16_t step);
 
 /// @brief オシレータの位相を進める
 /// @param ctx
