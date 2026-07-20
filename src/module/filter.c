@@ -18,6 +18,10 @@ void filter_set_coefficient(filter_ctx_t* ctx, uint8_t coefficient) {
     ctx->coefficient = coefficient;
 }
 
+uint8_t filter_get_coefficient(filter_ctx_t* ctx) {
+    return ctx->coefficient;
+}
+
 void filter_reset(filter_ctx_t* ctx, audio_sample_t value) {
     ctx->state_q8 = (int16_t)value << 8;
 }

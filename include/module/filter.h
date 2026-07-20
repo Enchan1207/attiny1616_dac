@@ -25,6 +25,11 @@ audio_sample_t filter_step(filter_ctx_t* ctx, audio_sample_t input);
 /// @param coefficient 係数 (0: カットオフ低 / 255: カットオフ高)
 void filter_set_coefficient(filter_ctx_t* ctx, uint8_t coefficient);
 
+/// @brief フィルタのLPF係数を取得する
+/// @param ctx
+/// @return
+uint8_t filter_get_coefficient(filter_ctx_t* ctx);
+
 /// @brief フィルタの内部状態を指定したサンプル値へリセットする
 /// @param ctx
 /// @param value
