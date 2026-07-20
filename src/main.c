@@ -30,10 +30,10 @@ int main() {
     synthesizer_set_active_synth(synth0);
 
     voice_set_waveform(&synth0->voice, VOICE_WAVEFORM_PULSE);
-    envelope_set(&synth0->voice.evp_ctx, ENVELOPE_PARAM_ATTACK, 0x01);
-    envelope_set(&synth0->voice.evp_ctx, ENVELOPE_PARAM_DECAY, 0x01);
-    envelope_set(&synth0->voice.evp_ctx, ENVELOPE_PARAM_SUSTAIN, 0xA0);
-    envelope_set(&synth0->voice.evp_ctx, ENVELOPE_PARAM_RELEASE, 0x01);
+    envelope_set_attack_ms(&synth0->voice.evp_ctx, 20);
+    envelope_set_decay_ms(&synth0->voice.evp_ctx, 80);
+    envelope_set_sustain(&synth0->voice.evp_ctx, 0xA0A0);
+    envelope_set_release_ms(&synth0->voice.evp_ctx, 120);
 
     // ノートボタン (PC1に仮設)
     PORTC.DIRCLR = 0b00000010;
