@@ -86,7 +86,7 @@ void envelope_note_off(envelope_ctx_t* ctx) {
     ctx->state = ENVELOPE_STATE_RELEASE;
 }
 
-uint8_t envelope_step(envelope_ctx_t* ctx) {
+audio_sample_t envelope_step(envelope_ctx_t* ctx) {
     switch (ctx->state) {
         case ENVELOPE_STATE_ATTACK: {
             uint32_t new_level = (uint32_t)ctx->current_level + ctx->attack_step;

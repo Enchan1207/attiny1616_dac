@@ -19,7 +19,7 @@ void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency) {
     ctx->step = step;
 }
 
-uint8_t oscillator_step(oscillator_ctx_t* ctx) {
+audio_sample_t oscillator_step(oscillator_ctx_t* ctx) {
     if (ctx->table == NULL) {
         return 0x80;
     }

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#include "module/audio.h"
 #include "wavetable/wavetable.h"
 
 /// @brief オシレータコンテキスト
@@ -29,6 +30,6 @@ void oscillator_set_frequency(oscillator_ctx_t* ctx, uint16_t frequency);
 /// @brief オシレータの位相を進める
 /// @param ctx
 /// @return 位相を進める前の時点でDACに出力されるべき値
-uint8_t oscillator_step(oscillator_ctx_t* ctx);
+audio_sample_t oscillator_step(oscillator_ctx_t* ctx);
 
 #endif /* MODULE_OSCILLATOR_H */
