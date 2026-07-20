@@ -8,7 +8,7 @@
 
 /// @brief ボイスコンテキスト
 typedef struct {
-    oscillator_ctx_t* osc_ctx;
+    oscillator_ctx_t osc_ctx;
 
     // TODO: envelope_ctx_t* evp_ctx;
 } voice_ctx_t;

@@ -1,6 +1,7 @@
 #ifndef MODULE_OSCILLATOR_H
 #define MODULE_OSCILLATOR_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /// @brief 波形テーブル
@@ -9,10 +10,16 @@ typedef struct {
 } wavetable_t;
 
 /// @brief オシレータコンテキスト
-typedef struct oscillator_ctx_t oscillator_ctx_t;
+typedef struct {
+    volatile bool enabled;
+    volatile uint16_t phase;
+    volatile uint16_t step;
+    volatile const wavetable_t* table;
+} oscillator_ctx_t;
 
-/// @brief オシレータインスタンス0
-extern oscillator_ctx_t* osc0;
+/// @brief オシレータを初期化する
+/// @param ctx
+void oscillator_init(oscillator_ctx_t* ctx);
 
 /// @brief 波形テーブルを設定する
 /// @param ctx

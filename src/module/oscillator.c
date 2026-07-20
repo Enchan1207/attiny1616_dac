@@ -3,21 +3,12 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-struct oscillator_ctx_t {
-    volatile bool enabled;
-    volatile uint16_t phase;
-    volatile uint16_t step;
-    volatile const wavetable_t* table;
-};
-
-struct oscillator_ctx_t osc0_internal = {
-    .enabled = false,
-    .phase = 0,
-    .step = 0,
-    .table = NULL,
-};
-
-oscillator_ctx_t* osc0 = &osc0_internal;
+void oscillator_init(oscillator_ctx_t* ctx) {
+    ctx->enabled = false;
+    ctx->phase = 0;
+    ctx->step = 0;
+    ctx->table = NULL;
+}
 
 void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table) {
     ctx->table = table;
