@@ -1,5 +1,7 @@
 #include "module/lfo.h"
 
+#include <util/atomic.h>
+
 #include "module/audio.h"
 
 const uint8_t LFO_DIVIDER = 32;
@@ -18,7 +20,10 @@ void lfo_set_waveform(lfo_ctx_t* ctx, lfo_waveform_t wfm) {
 
 void lfo_set_frequency(lfo_ctx_t* ctx, uint16_t freq) {
     uint16_t step = (uint64_t)freq * 65536ULL * LFO_DIVIDER / (1000ULL * AUDIO_SAMPLE_RATE);
-    ctx->step = step;
+
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->step = step;
+    }
 }
 
 static inline int8_t calculate_lfo_output(lfo_ctx_t* ctx) {
