@@ -8,6 +8,10 @@ static volatile tca0_overflow_handler_t overflow_handler = NULL;
 
 // TCA0オーバーフロー割り込み
 ISR(TCA0_OVF_vect) {
+#ifdef VISUALIZE_ISR_RATE
+    PORTC.OUT = 0b00000001;
+#endif
+
     // 割込みフラグをクリア
     TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm;
 
@@ -16,6 +20,10 @@ ISR(TCA0_OVF_vect) {
     }
 
     overflow_handler();
+
+#ifdef VISUALIZE_ISR_RATE
+    PORTC.OUT = 0b00000000;
+#endif
 }
 
 void tca0_init() {
@@ -29,6 +37,10 @@ void tca0_init() {
     // 48kHz = 20.83us = 2083ns
 
     // 125000ns / 50ns = 2500, 31250ns / 50ns = 625, 2083ns/50ns = 416, ...
+
+#ifdef VISUALIZE_ISR_RATE
+    PORTC.DIRSET = 0b00000001;
+#endif
 
     TCA0.SINGLE.PER = (625 - 1);
     TCA0.SINGLE.CTRLA |= TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;
