@@ -8,9 +8,9 @@
 
 /// @brief オシレータコンテキスト
 typedef struct {
-    volatile uint16_t phase;
+    uint16_t phase;
     volatile uint16_t step;
-    volatile const wavetable_t* table;
+    const wavetable_t* table;
 } oscillator_ctx_t;
 
 /// @brief オシレータを初期化する

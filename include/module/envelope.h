@@ -16,14 +16,14 @@ typedef enum {
 typedef struct {
     volatile envelope_state_t state;
 
-    volatile uint16_t attack_step;
+    uint16_t attack_step;
 
-    volatile uint16_t decay_ms;
-    volatile uint16_t decay_step;
+    uint16_t decay_ms;
+    uint16_t decay_step;
 
-    volatile uint16_t sustain;
+    uint16_t sustain;
 
-    volatile uint16_t release_ms;
+    uint16_t release_ms;
     volatile uint16_t release_step;
 
     volatile uint16_t current_level;

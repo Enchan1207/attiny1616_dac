@@ -1,6 +1,7 @@
 #include "module/voice.h"
 
 #include <stddef.h>
+#include <util/atomic.h>
 
 #include "hardware/dac0.h"
 #include "hardware/tca0.h"
@@ -45,7 +46,9 @@ void voice_init(voice_ctx_t* ctx) {
     oscillator_init(&ctx->osc_ctx);
     envelope_init(&ctx->evp_ctx);
 
-    ctx->base_step = 0;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->base_step = 0;
+    }
 }
 
 audio_sample_t voice_step(voice_ctx_t* ctx) {
@@ -62,7 +65,9 @@ void voice_note_on(voice_ctx_t* ctx, voice_note_t note) {
     uint16_t step = (uint32_t)frequency * 65536UL / AUDIO_SAMPLE_RATE;
     oscillator_set_step(&ctx->osc_ctx, step);
 
-    ctx->base_step = step;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->base_step = step;
+    }
 
     envelope_note_on(&ctx->evp_ctx);
 }

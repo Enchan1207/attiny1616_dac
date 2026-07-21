@@ -12,7 +12,7 @@ typedef enum {
 /// @brief LFOコンテキスト
 typedef struct {
     uint16_t phase;
-    uint16_t step;
+    volatile uint16_t step;
 
     uint8_t divider_counter;
     int8_t current_output;

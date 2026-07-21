@@ -13,7 +13,7 @@ typedef struct {
     oscillator_ctx_t osc_ctx;
     envelope_ctx_t evp_ctx;
 
-    uint16_t base_step;
+    volatile uint16_t base_step;
 } voice_ctx_t;
 
 /// @brief ボイスの波形

@@ -2,11 +2,12 @@
 #include <avr/io.h>
 #include <hardware/usart.h>
 #include <stddef.h>
+#include <util/atomic.h>
 
 struct usart_ctx_t {
     USART_t* const usart;
 
-    volatile const uint8_t* txDataPtr;
+    const uint8_t* volatile txDataPtr;
     volatile size_t txRemaining;
 
     volatile uint8_t rxBuffer[USART_RX_BUFSIZE];
@@ -69,9 +70,11 @@ void usart_write(usart_ctx_t* ctx, const uint8_t* const data, size_t len) {
 void usart_write_noblock(usart_ctx_t* ctx, const uint8_t* const data, size_t len) {
     while (ctx->txRemaining > 0);
 
-    ctx->txDataPtr = data;
-    ctx->txRemaining = len;
-    ctx->usart->CTRLA |= USART_DREIE_bm;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->txDataPtr = data;
+        ctx->txRemaining = len;
+        ctx->usart->CTRLA |= USART_DREIE_bm;
+    }
 }
 
 void usart_print(usart_ctx_t* ctx, const char* const str) {
