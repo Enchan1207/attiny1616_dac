@@ -8,3 +8,7 @@ target_sources(tinysynth_hardware PRIVATE
     rotenc.c
     usart.c
 )
+
+target_compile_definitions(tinysynth_hardware PRIVATE
+    $<$<BOOL:${TINYSYNTH_VISUALIZE_ISR_RATE}>:VISUALIZE_ISR_RATE>
+)
