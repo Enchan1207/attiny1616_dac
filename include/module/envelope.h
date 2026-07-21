@@ -12,21 +12,26 @@ typedef enum {
     ENVELOPE_STATE_RELEASE,
 } envelope_state_t;
 
-/// @brief エンベロープコンテキスト
+/// @brief エンベロープ設定値
 typedef struct {
-    volatile envelope_state_t state;
-
     uint16_t attack_step;
-
     uint16_t decay_ms;
     uint16_t decay_step;
-
     uint16_t sustain;
-
     uint16_t release_ms;
-    volatile uint16_t release_step;
+} envelope_params_t;
 
+/// @brief エンベロープの状態
+typedef struct {
+    volatile envelope_state_t state;
+    volatile uint16_t release_step;
     volatile uint16_t current_level;
+} envelope_runtime_t;
+
+/// @brief エンベロープコンテキスト
+typedef struct {
+    envelope_params_t params;
+    envelope_runtime_t runtime;
 } envelope_ctx_t;
 
 /// @brief エンベロープを初期化する
