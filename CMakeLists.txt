@@ -6,6 +6,8 @@ project(tinysynth
     LANGUAGES C
 )
 
+option(TINYSYNTH_VISUALIZE_ISR_RATE "Enable ISR rate visualization for TCA0 debugging" OFF)
+
 add_compile_options(
     -Wall
 )

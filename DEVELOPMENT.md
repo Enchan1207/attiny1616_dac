@@ -22,6 +22,12 @@ Avrdude done.  Thank you.
 cmake --preset target
 ```
 
+Enable `VISUALIZE_ISR_RATE`:
+
+```sh
+cmake --preset target -DTINYSYNTH_VISUALIZE_ISR_RATE=ON
+```
+
 ```sh
 cmake --build --preset target
 ```
