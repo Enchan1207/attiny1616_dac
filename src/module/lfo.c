@@ -45,11 +45,12 @@ static inline int8_t calculate_lfo_output(lfo_ctx_t* ctx) {
     }
 }
 
-int8_t lfo_step(lfo_ctx_t* ctx) {
+void lfo_step(lfo_ctx_t* ctx, lfo_result_t* result) {
     // LFO_DIVIDER回呼ばれるまで前の値を返し続ける
     ctx->divider_counter++;
     if (ctx->divider_counter < LFO_DIVIDER) {
-        return ctx->current_output;
+        result->updated = false;
+        return;
     }
     ctx->divider_counter = 0;
 
@@ -57,5 +58,16 @@ int8_t lfo_step(lfo_ctx_t* ctx) {
     int8_t value = calculate_lfo_output(ctx);
     ctx->phase += ctx->step;
     ctx->current_output = value;
-    return value;
+
+    result->updated = true;
+    result->value = value;
+    return;
+}
+
+void lfo_reset_phase(lfo_ctx_t* ctx) {
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->phase = 0;
+        ctx->divider_counter = 0;
+        ctx->current_output = 0;
+    }
 }
