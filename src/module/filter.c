@@ -1,5 +1,7 @@
 #include "module/filter.h"
 
+#include <util/atomic.h>
+
 /// @brief カットオフ値テーブル
 static const uint16_t cutoff_table[] = {
     128,
@@ -59,8 +61,10 @@ void filter_set_cutoff(filter_ctx_t* ctx, uint8_t cutoff) {
     uint16_t upper = cutoff_table[index + 1];
     int32_t diff = (int32_t)upper - lower;
 
-    ctx->cutoff = cutoff;
-    ctx->coefficient_q15 = (uint16_t)(lower + ((diff * fraction) >> 3));
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->cutoff = cutoff;
+        ctx->coefficient_q15 = (uint16_t)(lower + ((diff * fraction) >> 3));
+    }
 }
 
 uint8_t filter_get_cutoff(filter_ctx_t* ctx) {

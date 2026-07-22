@@ -31,6 +31,10 @@ void synthesizer_init(synthesizer_ctx_t* ctx);
 /// @param ctx
 void synthesizer_set_active_synth(synthesizer_ctx_t* ctx);
 
+/// @brief シンセサイザのLFO位相をリセットする
+/// @param ctx
+void synthesizer_reset_lfo_phase(synthesizer_ctx_t* ctx);
+
 /// @brief シンセサイザのLFO深度を設定する
 /// @param ctx
 /// @param depth

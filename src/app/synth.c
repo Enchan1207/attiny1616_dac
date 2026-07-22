@@ -1,5 +1,6 @@
 #include "app/synth.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "hardware/dac0.h"
@@ -17,10 +18,16 @@ static void synthesizer_step() {
         return;
     }
 
-    int8_t lfo_value = lfo_step(&active_synth->modulation_lfo);
-    int16_t pitch_modulation = ((int16_t)lfo_value * active_synth->lfo_depth) >> 7;
+    lfo_result_t result = {
+        .updated = false,
+        .value = 0,
+    };
+    lfo_step(&active_synth->modulation_lfo, &result);
 
-    voice_set_pitch_modulation(&active_synth->voice, pitch_modulation);
+    if (result.updated) {
+        int16_t pitch_modulation = ((int16_t)result.value * active_synth->lfo_depth) >> 7;
+        voice_set_pitch_modulation(&active_synth->voice, pitch_modulation);
+    }
 
     audio_sample_t voice = voice_step(&active_synth->voice);
     audio_sample_t filtered = filter_step(&active_synth->filter, voice);
@@ -46,6 +53,10 @@ void synthesizer_init(synthesizer_ctx_t* ctx) {
 
 void synthesizer_set_active_synth(synthesizer_ctx_t* ctx) {
     active_synth = ctx;
+}
+
+void synthesizer_reset_lfo_phase(synthesizer_ctx_t* ctx) {
+    lfo_reset_phase(&ctx->modulation_lfo);
 }
 
 void synthesizer_set_lfo_depth(synthesizer_ctx_t* ctx, uint8_t depth) {

@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/atomic.h>
 
 #include "module/audio.h"
 
@@ -16,7 +17,9 @@ void oscillator_set_wavetable(oscillator_ctx_t* ctx, const wavetable_t* table) {
 }
 
 void oscillator_set_step(oscillator_ctx_t* ctx, uint16_t step) {
-    ctx->step = step;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->step = step;
+    }
 }
 
 audio_sample_t oscillator_step(oscillator_ctx_t* ctx) {

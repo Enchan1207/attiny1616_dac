@@ -9,7 +9,7 @@
 typedef struct {
     int32_t state_q8;
     uint8_t cutoff;
-    uint16_t coefficient_q15;
+    volatile uint16_t coefficient_q15;
 } filter_ctx_t;
 
 /// @brief フィルタを初期化する

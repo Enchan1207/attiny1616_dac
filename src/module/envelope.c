@@ -1,5 +1,7 @@
 #include "module/envelope.h"
 
+#include <util/atomic.h>
+
 #include "module/audio.h"
 
 const uint16_t ENVELOPE_MAX_LEVEL = 65535;
@@ -38,79 +40,94 @@ static uint16_t envelope_calc_step(uint32_t range, uint16_t ms) {
 }
 
 void envelope_init(envelope_ctx_t* ctx) {
-    ctx->attack_step = 0;
-    ctx->decay_ms = 0;
-    ctx->decay_step = 0;
-    ctx->sustain = 0;
-    ctx->release_ms = 0;
-    ctx->release_step = 0;
-    ctx->state = ENVELOPE_STATE_STOP;
-    ctx->current_level = 0;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->params.attack_step = 0;
+        ctx->params.decay_ms = 0;
+        ctx->params.decay_step = 0;
+        ctx->params.sustain = 0;
+        ctx->params.release_ms = 0;
+        ctx->runtime.release_step = 0;
+        ctx->runtime.state = ENVELOPE_STATE_STOP;
+        ctx->runtime.current_level = 0;
+    }
 }
 
 void envelope_set_attack_ms(envelope_ctx_t* ctx, uint16_t ms) {
-    ctx->attack_step = envelope_calc_step(ENVELOPE_MAX_LEVEL, ms);
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->params.attack_step = envelope_calc_step(ENVELOPE_MAX_LEVEL, ms);
+    }
 }
 
 void envelope_set_decay_ms(envelope_ctx_t* ctx, uint16_t ms) {
-    ctx->decay_ms = ms;
-    ctx->decay_step = envelope_calc_step(ENVELOPE_MAX_LEVEL - ctx->sustain, ms);
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->params.decay_ms = ms;
+        ctx->params.decay_step = envelope_calc_step(ENVELOPE_MAX_LEVEL - ctx->params.sustain, ms);
+    }
 }
 
 void envelope_set_sustain(envelope_ctx_t* ctx, uint16_t value) {
-    ctx->sustain = value;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->params.sustain = value;
 
-    if (ctx->state != ENVELOPE_STATE_DECAY) {
-        return;
+        if (ctx->runtime.state != ENVELOPE_STATE_DECAY) {
+            return;
+        }
+
+        uint16_t sustain_level = ctx->params.sustain;
+        uint32_t range = 0;
+
+        if (ctx->runtime.current_level > sustain_level) {
+            range = ctx->runtime.current_level - sustain_level;
+        }
+
+        ctx->params.decay_step = envelope_calc_step(range, ctx->params.decay_ms);
     }
-
-    uint16_t sustain_level = ctx->sustain;
-    uint32_t range = 0;
-
-    if (ctx->current_level > sustain_level) {
-        range = ctx->current_level - sustain_level;
-    }
-
-    ctx->decay_step = envelope_calc_step(range, ctx->decay_ms);
 }
 
 void envelope_set_release_ms(envelope_ctx_t* ctx, uint16_t ms) {
-    ctx->release_ms = ms;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->params.release_ms = ms;
+    }
 }
 
 void envelope_note_on(envelope_ctx_t* ctx) {
-    ctx->state = ENVELOPE_STATE_ATTACK;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->runtime.state = ENVELOPE_STATE_ATTACK;
+    }
 }
 
 void envelope_note_off(envelope_ctx_t* ctx) {
-    ctx->release_step = envelope_calc_step(ctx->current_level, ctx->release_ms);
-    ctx->state = ENVELOPE_STATE_RELEASE;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        ctx->runtime.release_step = envelope_calc_step(ctx->runtime.current_level, ctx->params.release_ms);
+        ctx->runtime.state = ENVELOPE_STATE_RELEASE;
+    }
 }
 
 uint8_t envelope_step(envelope_ctx_t* ctx) {
-    switch (ctx->state) {
+    switch (ctx->runtime.state) {
         case ENVELOPE_STATE_ATTACK: {
-            uint32_t new_level = (uint32_t)ctx->current_level + ctx->attack_step;
+            uint32_t new_level = (uint32_t)ctx->runtime.current_level + ctx->params.attack_step;
 
             if (new_level >= ENVELOPE_MAX_LEVEL) {
-                ctx->state = ENVELOPE_STATE_DECAY;
-                ctx->current_level = (uint16_t)ENVELOPE_MAX_LEVEL;
-                ctx->decay_step = envelope_calc_step(ENVELOPE_MAX_LEVEL - ctx->sustain, ctx->decay_ms);
+                ctx->runtime.state = ENVELOPE_STATE_DECAY;
+                ctx->runtime.current_level = (uint16_t)ENVELOPE_MAX_LEVEL;
+                ctx->params.decay_step =
+                    envelope_calc_step(ENVELOPE_MAX_LEVEL - ctx->params.sustain, ctx->params.decay_ms);
                 break;
             }
 
-            ctx->current_level = (uint16_t)new_level;
+            ctx->runtime.current_level = (uint16_t)new_level;
             break;
         }
 
         case ENVELOPE_STATE_DECAY:
-            if (ctx->current_level <= ctx->sustain + ctx->decay_step) {
-                ctx->state = ENVELOPE_STATE_SUSTAIN;
-                ctx->current_level = ctx->sustain;
+            if (ctx->runtime.current_level <= ctx->params.sustain + ctx->params.decay_step) {
+                ctx->runtime.state = ENVELOPE_STATE_SUSTAIN;
+                ctx->runtime.current_level = ctx->params.sustain;
                 break;
             }
 
-            ctx->current_level -= ctx->decay_step;
+            ctx->runtime.current_level -= ctx->params.decay_step;
             break;
 
         case ENVELOPE_STATE_SUSTAIN:
@@ -118,18 +135,18 @@ uint8_t envelope_step(envelope_ctx_t* ctx) {
             break;
 
         case ENVELOPE_STATE_RELEASE:
-            if (ctx->current_level <= ctx->release_step) {
-                ctx->state = ENVELOPE_STATE_STOP;
-                ctx->current_level = 0;
+            if (ctx->runtime.current_level <= ctx->runtime.release_step) {
+                ctx->runtime.state = ENVELOPE_STATE_STOP;
+                ctx->runtime.current_level = 0;
                 break;
             }
 
-            ctx->current_level -= ctx->release_step;
+            ctx->runtime.current_level -= ctx->runtime.release_step;
             break;
 
         default:
             break;
     }
 
-    return (uint8_t)(ctx->current_level >> 8);
+    return (uint8_t)(ctx->runtime.current_level >> 8);
 }

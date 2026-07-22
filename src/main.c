@@ -61,6 +61,7 @@ ISR(PORTC_PORT_vect) {
 
     if (!(input & PIN1_bm)) {
         voice_note_on(&synth0->voice, VOICE_NOTE_C);
+        synthesizer_reset_lfo_phase(synth0);
     }
 
     if (input & PIN1_bm) {
